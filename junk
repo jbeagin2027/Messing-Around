@@ -1,0 +1,98 @@
+junk
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.multicalculator;
+
+/**
+ *
+ * @author jbeagin2027
+ */
+
+import java.util.Scanner;
+import java.lang.Math;
+
+public class MultiCalculator {
+
+    public static void main(String[] args) {
+        
+        //Setup the scanner under input
+        Scanner input = new Scanner(System.in);
+        
+        //declare variables used in the calculator
+        int requestedCalculator, requestedInput;
+        double userInput, secondaryUserInput;
+        
+        //initial user prompting
+        System.out.println("\n\nWelcome to MultiCalculator! Enter a number: \n"
+                + "1 for Farhenheit/Celsius \n"
+                + "2 for Inches/Meters \n"
+                + "3 for Body Mass Index \n"
+                + "4 for Speeds Conversion");
+        
+        //Get calculator choice
+        requestedCalculator = input.nextInt();
+        
+        //Degrees calculator
+        if(requestedCalculator == 1){
+            System.out.println("\nEnter a number: \n"
+                    + "1 for Farhenheit -> Celsius \n"
+                    + "2 for Celsius -> Farhenheit");
+            requestedInput = input.nextInt();
+            if(requestedInput == 1){
+                System.out.println("Input the temperature in Farhenheit");
+                userInput = input.nextDouble();
+                System.out.println(userInput+" degrees Farhenheit is equal to "+((userInput-32)/(9.0/5))+" degrees Celsius");
+            }
+            if(requestedInput == 2){
+                System.out.println("Input the temperature in Celsius");
+                userInput = input.nextDouble();
+                System.out.println(userInput+" degrees Celsius is equal to "+((userInput-32)/(9.0/5))+" degrees Farhenheit");
+            }
+        }
+        
+        //Distances Calculator
+        if(requestedCalculator == 2){
+            System.out.println("\nEnter a number: \n"
+                    + "1 for Inches -> Meters \n"
+                    + "2 for Meters -> Inches");
+            requestedInput = input.nextInt();
+            if(requestedInput == 1){
+                System.out.println("Input the distance in Inches");
+                userInput = input.nextDouble();
+                System.out.println(userInput+" Inches is equal to "+(userInput/39.37)+" Meters");
+            }
+            if(requestedInput == 2){
+                System.out.println("Input the distance in Meters");
+                userInput = input.nextDouble();
+                System.out.println(userInput+" Meters is equal to "+(userInput*39.37)+" Inches");
+            }
+        }
+        
+        //Body Mass Index Calculator
+        if(requestedCalculator == 3){
+            System.out.println("Input the height in inches");
+            userInput = input.nextDouble();
+            System.out.println("Input the weight in pounds");
+            secondaryUserInput = input.nextDouble();
+            System.out.println("The resulting Body Mass Index is: "+(703*secondaryUserInput/Math.pow(userInput,2)));
+        }
+        
+        //Speeds calculator
+        if(requestedCalculator == 4){
+            System.out.println("\nEnter a number: \n"
+                    + "1 for Inputting Feet/Second \n"
+                    + "2 for Inputting Meters/Second \n"
+                    + "3 for Inputting Miles/Hour \n"
+                    + "4 for Inputting Kilometers/Hour");
+            requestedInput = input.nextInt();
+            if(requestedInput == 1){
+                System.out.println("Input the distance in Inches");
+                userInput = input.nextDouble();
+                System.out.println(userInput+" Inches is equal to "+(userInput/39.37)+" Meters");
+            }
+        }
+
+    }
+}
