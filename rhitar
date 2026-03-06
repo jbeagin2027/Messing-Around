@@ -1,0 +1,84 @@
+
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.chessbetter;
+
+/**
+ *
+ * @author jbeagin2027
+ */
+
+import java.util.*;
+
+public class ChessBetter {
+
+    public static void main(String[] args) {
+        System.out.println("Hello World!");
+    }
+}
+
+class Vect{
+    
+    private int dx, dy;
+    public final static int range = 7;
+    public Vect(int x, int y){
+        dx = Math.clamp(x, -range, range);
+        dy = Math.clamp(y, -range, range);
+    }
+    public int getX(){return dx;}
+    public int getY(){return dy;}
+    public void setX(int x){Math.clamp(x, -range, range);}
+    public void setY(int y){Math.clamp(y, -range, range);}
+    
+}
+
+class Piece{
+    
+    private boolean[][] moveOptions = new boolean[2*Vect.range+1][2*Vect.range+1];
+    private boolean[][] captureOptions = new boolean[2*Vect.range+1][2*Vect.range+1];
+    
+    private int lastx, lasty;
+    private boolean everMove = false;
+    
+    public Piece(Vect[] moves, Vect[] caps){
+        
+        for (int i = 0; i <= 2*Vect.range; i++) {
+            for(int j = 0; j <= 2*Vect.range; j++){
+                moveOptions[i+Vect.range][j+Vect.range] = false;
+                captureOptions[i+Vect.range][j+Vect.range] = false;
+            }
+        }
+        
+        for(Vect move : moves){
+                moveOptions[move.getX()+Vect.range][move.getY()+Vect.range] = true;
+        }
+        for(Vect cap : caps){
+                moveOptions[cap.getX()+Vect.range][cap.getY()+Vect.range] = true;
+        }
+    }
+    
+    public boolean tryMove(Vect in, boolean full){
+        if(full){
+            return captureOptions[in.getX()+Vect.range][in.getY()+Vect.range];
+        }else{return moveOptions[in.getX()+Vect.range][in.getY()+Vect.range];}
+    }
+    
+    public void Move(Vect in){
+        everMove = true;
+        lastx = in.getX();
+        lasty = in.getY();
+    }
+    
+    public boolean everMoved(){return everMove;}
+    
+}
+
+class Board{
+    private Piece[][] pieces = new Piece[Vect.range+1][Vect.range+1];
+    private boolean[][] promotionSquares = new boolean[Vect.range+1][Vect.range+1];
+    private ArrayList<Piece> Promotables = new ArrayList();
+    
+    
+}
