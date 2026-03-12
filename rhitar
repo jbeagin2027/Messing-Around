@@ -1,4 +1,3 @@
-
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
@@ -16,6 +15,8 @@ public class ChessBetter {
 
     public static void main(String[] args) {
         System.out.println("Hello World!");
+        
+        
     }
 }
 
@@ -27,58 +28,145 @@ class Vect{
         dx = Math.clamp(x, -range, range);
         dy = Math.clamp(y, -range, range);
     }
+    public Vect(){}
     public int getX(){return dx;}
     public int getY(){return dy;}
     public void setX(int x){Math.clamp(x, -range, range);}
     public void setY(int y){Math.clamp(y, -range, range);}
+    @Override
+    public String toString(){return ((dx)+" "+(dy));}
+    /*public ArrayList<Vect> subVectors(){
+        
+    }*///returns all of the subvectors, exluding both the full vector and the trivial 0,0 vector
     
 }
 
-class Piece{
+class Team{
     
-    private boolean[][] moveOptions = new boolean[2*Vect.range+1][2*Vect.range+1];
-    private boolean[][] captureOptions = new boolean[2*Vect.range+1][2*Vect.range+1];
-    
-    private int lastx, lasty;
-    private boolean everMove = false;
-    
-    public Piece(Vect[] moves, Vect[] caps){
-        
-        for (int i = 0; i <= 2*Vect.range; i++) {
-            for(int j = 0; j <= 2*Vect.range; j++){
-                moveOptions[i+Vect.range][j+Vect.range] = false;
-                captureOptions[i+Vect.range][j+Vect.range] = false;
-            }
+    private final boolean isBot;
+    private final String name;
+    private final ArrayList<Spot> PromotionZone = new ArrayList();
+    private final int priority;
+    @Override
+    public String toString(){return name;}
+    public Team(ArrayList<Spot> promote, String nin, boolean bin, int prio){
+        for(Spot spot : promote){
+            PromotionZone.add(spot);
         }
+        name = nin;
+        isBot = bin;
+        priority = prio;//priority must be made unique
+    }
+    public int getPrio(){return priority;}
+    
+    
+    static class Bot{
+        
+        
+        
+    }
+    
+}
+
+class Spot{
+    private final int x, y;
+    public Spot(int xin, int yin){
+        x = xin;
+        y = yin;
+    }
+    public int getX(){return x;}
+    public int getY(){return y;}
+}
+
+
+
+class PieceType{
+    
+    private final ArrayList<Vect> moveOptions = new ArrayList();
+    private final ArrayList<Vect> captureOptions = new ArrayList();
+    private final boolean isPawn, isRoyal, rookish;//royal pieces can be checkmated, stalemated, and castle with a rookish piece
+    //pawns can enpassant, promote, rookish pieces can castle with the king if they are orthogonol and both unmoved
+    private final String name;//The name of the piece is its display name, which should be like B or p
+    private final Team team; //team names should be like, "White" "Black" "Green" or single-word capitalized with no spaces 
+    
+    public PieceType(ArrayList<Vect> moves, ArrayList<Vect> caps, boolean pawn, boolean royal, boolean castler, Team teamIn, String nameIn){
         
         for(Vect move : moves){
-                moveOptions[move.getX()+Vect.range][move.getY()+Vect.range] = true;
+            moveOptions.add(move);
         }
         for(Vect cap : caps){
-                moveOptions[cap.getX()+Vect.range][cap.getY()+Vect.range] = true;
+            moveOptions.add(cap);
         }
+        isPawn = pawn;
+        isRoyal = royal;
+        rookish = castler;
+        name = nameIn;
+        team = teamIn;
+        
     }
     
-    public boolean tryMove(Vect in, boolean full){
-        if(full){
-            return captureOptions[in.getX()+Vect.range][in.getY()+Vect.range];
-        }else{return moveOptions[in.getX()+Vect.range][in.getY()+Vect.range];}
+    class Piece{
+        
+        private int xpo;
+        private int ypo;
+        private Vect lastMove = new Vect();
+        private boolean everMoved;
+        
+        public int getX(){return xpo;}
+        public int getY(){return ypo;}
+        public void move(Vect move){
+            lastMove = move;
+            xpo+=move.getX();
+            ypo+=move.getY();
+            everMoved=false;
+        }
+        
+        public Piece(Vect last, boolean ever, int x, int y){
+            
+            lastMove = last;
+            everMoved = ever;
+            xpo = Math.clamp(x,0,7);
+            ypo = Math.clamp(y,0,7);
+            
+        }
+        @Override
+        public String toString(){return name;}
+        
+        public String getTeam(){return team.toString();}
+        
+        public boolean isRook(){return rookish;}
+        public boolean isPawn(){return isPawn;}
+        public boolean isRoyal(){return isRoyal;}
+        public boolean hasMoved(){return everMoved;}
+        public Vect lastMove(){return lastMove;}
+        
+        public boolean can(Vect attempt, boolean isOccupied){
+            int x = attempt.getX();
+            int y = attempt.getY();
+            if((x+xpo)>=0&&(y+ypo)>=0&&(x+xpo)<=Vect.range&&(y+ypo)<=Vect.range){
+                if(isOccupied){
+                    for(Vect cap : captureOptions){
+                        if(cap.toString().equals(attempt.toString())){return true;}
+                    }
+                    return false;
+                }else{
+                    for(Vect move : moveOptions){
+                        if(move.toString().equals(attempt.toString())){return true;}
+                    }
+                    return false;
+                }
+            }else return false;
+            
+        }
+        
     }
-    
-    public void Move(Vect in){
-        everMove = true;
-        lastx = in.getX();
-        lasty = in.getY();
-    }
-    
-    public boolean everMoved(){return everMove;}
     
 }
 
 class Board{
-    private Piece[][] pieces = new Piece[Vect.range+1][Vect.range+1];
-    private boolean[][] promotionSquares = new boolean[Vect.range+1][Vect.range+1];
-    private ArrayList<Piece> Promotables = new ArrayList();
+    private ArrayList<PieceType.Piece> pieces = new ArrayList();
+    private ArrayList<Team> teams = new ArrayList();
+    private int priority;
     
     
 }
